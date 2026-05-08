@@ -1,7 +1,7 @@
+import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 # ============================================
 # CONFIG
@@ -12,18 +12,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# Style CSS pro
 st.markdown("""
     <style>
     .main { background-color: #f8f9fa; }
-    .metric-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 4px solid #E07B00;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    h1 { color: #1a1a2e; }
     .stMetric { background: white; padding: 15px; border-radius: 8px; }
     </style>
 """, unsafe_allow_html=True)
@@ -33,8 +24,9 @@ st.markdown("""
 # ============================================
 @st.cache_data
 def load_data():
-    df = pd.read_csv('../data/volve_production_clean.csv',
-                     parse_dates=['DATEPRD'])
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filepath = os.path.join(BASE_DIR, 'data', 'volve_production_clean.csv')
+    df = pd.read_csv(filepath, parse_dates=['DATEPRD'])
     df['WATER_CUT'] = (
         df['BORE_WAT_VOL'] /
         (df['BORE_OIL_VOL'] + df['BORE_WAT_VOL'])
@@ -46,14 +38,13 @@ df = load_data()
 # ============================================
 # HEADER
 # ============================================
-st.markdown("## Volve Field — Well Production QC Dashboard")
+st.markdown("## 🛢️ Volve Field — Well Production QC Dashboard")
 st.markdown("*Champ Volve, Mer du Nord (2008–2016) · Equinor Open Dataset · Portfolio TotalEnergies*")
 st.divider()
 
 # ============================================
 # FILTRES SIDEBAR
 # ============================================
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/TotalEnergies_logo.svg/320px-TotalEnergies_logo.svg.png", width=180)
 st.sidebar.markdown("### 🔧 Filtres")
 
 puits = st.sidebar.multiselect(
@@ -78,15 +69,15 @@ df_filtered = df[
 # ============================================
 col1, col2, col3, col4, col5 = st.columns(5)
 
-col1.metric("Huile totale",
+col1.metric("🛢️ Huile totale",
             f"{df_filtered['BORE_OIL_VOL'].sum()/1e6:.1f}M Sm³")
-col2.metric("Gaz total",
+col2.metric("🔥 Gaz total",
             f"{df_filtered['BORE_GAS_VOL'].sum()/1e6:.0f}M Sm³")
-col3.metric("Eau totale",
+col3.metric("💧 Eau totale",
             f"{df_filtered['BORE_WAT_VOL'].sum()/1e6:.1f}M Sm³")
 col4.metric("🕳️ Puits actifs",
             df_filtered['NPD_WELL_BORE_NAME'].nunique())
-col5.metric("Jours de prod.",
+col5.metric("📅 Jours de prod.",
             df_filtered['DATEPRD'].nunique())
 
 st.divider()
@@ -104,7 +95,7 @@ with col1:
         oil_by_well,
         x='NPD_WELL_BORE_NAME',
         y='BORE_OIL_VOL',
-        title='Production totale par puits',
+        title='🛢️ Production totale par puits',
         labels={'NPD_WELL_BORE_NAME': 'Puits',
                 'BORE_OIL_VOL': 'Volume huile (Sm³)'},
         color='BORE_OIL_VOL',
@@ -127,7 +118,7 @@ with col2:
         wc,
         x='NPD_WELL_BORE_NAME',
         y='WATER_CUT',
-        title='Water Cut moyen par puits',
+        title='💧 Water Cut moyen par puits',
         labels={'NPD_WELL_BORE_NAME': 'Puits',
                 'WATER_CUT': 'Water Cut (%)'},
         color='WATER_CUT',
@@ -151,15 +142,12 @@ fig3 = px.line(
     oil_time,
     x='DATEPRD',
     y='BORE_OIL_VOL',
-    title='Évolution de la production journalière',
+    title='📉 Évolution de la production journalière',
     labels={'DATEPRD': 'Date',
             'BORE_OIL_VOL': 'Production huile (Sm³/jour)'},
     color_discrete_sequence=['#E07B00']
 )
-fig3.update_layout(
-    plot_bgcolor='white',
-    paper_bgcolor='white'
-)
+fig3.update_layout(plot_bgcolor='white', paper_bgcolor='white')
 st.plotly_chart(fig3, use_container_width=True)
 
 # ============================================
@@ -172,7 +160,7 @@ with col1:
         df_filtered,
         x='NPD_WELL_BORE_NAME',
         y='AVG_DOWNHOLE_PRESSURE',
-        title='Distribution pression fond de puits',
+        title='⚠️ Distribution pression fond de puits',
         labels={'NPD_WELL_BORE_NAME': 'Puits',
                 'AVG_DOWNHOLE_PRESSURE': 'Pression (bar)'},
         color='NPD_WELL_BORE_NAME',
@@ -195,7 +183,7 @@ with col2:
         x='DATEPRD',
         y='BORE_OIL_VOL',
         color='NPD_WELL_BORE_NAME',
-        title='Production par puits dans le temps',
+        title='📊 Production par puits dans le temps',
         labels={'DATEPRD': 'Date',
                 'BORE_OIL_VOL': 'Production (Sm³/jour)',
                 'NPD_WELL_BORE_NAME': 'Puits'}
