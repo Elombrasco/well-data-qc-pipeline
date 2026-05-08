@@ -109,5 +109,8 @@ streamlit run app.py
 ## 👤 Auteur
 
 **Elom Brasco** — Ingénieur Géophysicien | Data enthousiast
+
 Formation : CentraleSupélec Openclassrooms · Université de Bordeaux · Google Data Analytics  
+
+
 [https://www.linkedin.com/in/frejus-ibatta/](#) · [obesse017@gmail.com](#)
