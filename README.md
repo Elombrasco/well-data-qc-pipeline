@@ -28,7 +28,7 @@ TotalEnergies operates thousands of wells worldwide. Well log data (LAS format) 
 
 ---
 
-## 🔄 Methodology — Google Data Analytics Framework
+## 🔄 Methodology — Analytics Framework
 
 ### ❓ ASK
 Key business questions this project answers :
