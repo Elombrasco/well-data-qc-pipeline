@@ -2,6 +2,9 @@ import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
+from qc_engine import run_qc
 
 # ============================================
 # CONFIG
@@ -23,6 +26,7 @@ st.markdown("""
 # DONNÉES
 # ============================================
 @st.cache_data
+
 def load_data():
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     filepath = os.path.join(BASE_DIR, 'data', 'volve_production_clean.csv')
@@ -31,9 +35,10 @@ def load_data():
         df['BORE_WAT_VOL'] /
         (df['BORE_OIL_VOL'] + df['BORE_WAT_VOL'])
     ) * 100
-    return df
+    qc = run_qc(df)
+    return df, qc
 
-df = load_data()
+df, qc = load_data()
 
 # ============================================
 # HEADER
@@ -194,6 +199,45 @@ with col2:
     )
     st.plotly_chart(fig5, use_container_width=True)
 
+# ============================================
+# SECTION QC SCORES
+# ============================================
+st.divider()
+st.markdown("## 🔍 Scores Qualité des Données (QC)")
+
+qc_filtered = qc[qc['well'].isin(puits)]
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig_qc = px.bar(
+        qc_filtered.sort_values('score'),
+        x='well',
+        y='score',
+        title='📊 Score QC par puits',
+        labels={'well': 'Puits', 'score': 'Score QC (/100)'},
+        color='score',
+        color_continuous_scale=['#e74c3c', '#f39c12', '#2ecc71'],
+        range_color=[0, 100],
+        text_auto=True
+    )
+    fig_qc.update_layout(
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        coloraxis_showscale=False
+    )
+    st.plotly_chart(fig_qc, use_container_width=True)
+
+with col2:
+    st.markdown("#### Statut QC par puits")
+    for _, row in qc_filtered.sort_values('score').iterrows():
+        color = "🟢" if row['score'] >= 80 else "🟡" if row['score'] >= 60 else "🔴"
+        st.markdown(
+            f"{color} **{row['well']}** — "
+            f"Score : **{row['score']}/100** | "
+            f"Issues HIGH : **{row['high_issues']}** | "
+            f"Issues MEDIUM : **{row['medium_issues']}**"
+        )
 # ============================================
 # FOOTER
 # ============================================
