@@ -1,98 +1,113 @@
-# well-data-qc-pipeline
-Automated QC pipeline for well log data (LAS)
-## Live Dashboard
-👉 [Voir le dashboard en ligne](https://volve-well-qc.streamlit.app)
-
-
 # 🛢️ Well Data Quality Control Pipeline
+> **Portfolio project** 
+
+## 🚀 Live Dashboard
+👉 **[Voir le dashboard en ligne](https://volve-well-qc.streamlit.app)**
+
+---
 
 ## 🎯 Business Problem
 
-TotalEnergies operates thousands of wells worldwide. Well log data (LAS format) comes from heterogeneous sources — contractors, field teams, and historical databases. Poor quality or inconsistent data leads to :
+x enterprise opère des milliers de puits à travers le monde. Les données de diagraphies collectées proviennent de sources hétérogènes — prestataires, équipes terrain, bases historiques. Des données mal qualifiées entraînent :
 
-- Costly **geological misinterpretations**
-- **Delayed decisions** on exploration projects
-- **Repetitive manual work** for geoscientists
+- Des **erreurs d'interprétation géologique** coûteuses
+- Des **retards de décision** sur les projets d'exploration
+- Un **travail manuel répétitif** pour les géoscientifiques
 
-> **Business Impact :** Reduce manual well data validation time by ~70% through an automated Quality Control pipeline.
+> **Impact business visé :** Réduire le temps de validation manuelle des données de puits de ~70% grâce à un pipeline automatisé de Quality Control.
 
 ---
 
-## 🔗 Direct link to the target 
+## 🔗 Objectifs
 
- What this project demonstrates |
+|Ce que ce projet démontre |
 |---|---|
-| Data inventory & collection | ✅ PREPARE phase |
-| Harmonization & standardization | ✅ PROCESS phase |
-| Automated quality control | ✅ ANALYZE phase |
-| Reporting to geoscience teams | ✅ SHARE phase |
-| Workflow automation | ✅ Pipeline architecture |
+| Inventaire & collecte des données puits | ✅ Phase PREPARE |
+| Harmonisation & standardisation | ✅ Phase PROCESS |
+| Contrôle qualité automatisé | ✅ QC Engine — 5 règles automatisées |
+| Reporting aux équipes géosciences | ✅ Rapport PDF automatisé |
+| Automatisation des workflows | ✅ Pipeline Python bout-en-bout |
 
 ---
 
-## 🔄 Methodology — Analytics Framework
+## 🔄 Méthodologie — Google Data Analytics Framework
 
-### ❓ ASK
-Key business questions this project answers :
-- Which wells have immediately usable data ?
-- Which log curves are missing or corrupted ?
-- Are naming conventions consistent across wells ?
-- Are there physical inconsistencies in the measurements ?
-- What is the overall quality score of the well portfolio ?
-
-**Success KPIs :**
-- Anomaly detection rate > 95%
-- Processing time < 5 seconds per well
-- Operational dashboard usable without Python knowledge
+| Phase | Description | Livrable |
+|---|---|---|
+| ❓ ASK | Définition des questions business | 5 questions KPI |
+| 📦 PREPARE | Téléchargement et exploration du dataset Volve | Notebook EDA |
+| ⚙️ PROCESS | Nettoyage, harmonisation, déduplication | CSV propre |
+| 📊 ANALYZE | Production, water cut, pression, déclin | 4 insights business |
+| 📤 SHARE | Dashboard interactif + rapport PDF | Streamlit + PDF |
 
 ---
 
-### 📦 PREPARE
-Dataset    : Volve Field Open Dataset — Equinor (2018)
-Type       : LAS files (Log ASCII Standard)
-Volume     : 22 wells | 15+ curves per well | depths 1500–4500m
-Source     : North Sea, Norway — real production data
-License    : Open data — Creative Commons
+## 📊 Résultats Clés
 
-Key curves analyzed : GR · RHOB · NPHI · DT · CALI
-
----
-
-### ⚙️ PROCESS
-Pipeline steps :
-1. Automatic parsing of all LAS files
-2. Null value detection (-9999.25 = industry standard)
-3. Physical range validation per curve
-4. Curve name harmonization (e.g. GAMMA_RAY → GR)
-5. Depth monotonicity check
-6. Quality score calculation per well (0–100)
-7. Storage in structured SQLite database
+🥇 15/9-F-12  → 4.5M Sm³ huile  | Score QC : 55/100 ❌
+🥈 15/9-F-14  → 3.9M Sm³ huile  | Score QC : 50/100 ❌
+⚠️  Water Cut  → F-14 = 65% eau  | Coût de traitement élevé
+📉 Déclin      → Peak 2009-2010  | Déplétion naturelle confirmée
+✅ 15/9-F-15D → Score QC 98/100 | Données les plus fiables
 
 ---
 
-### 📊 ANALYZE
-- Well ranking by quality score
-- Most problematic curves identification
-- Anomaly distribution by type
-- Cross-well comparison on same formations
-- Detection of wells requiring re-acquisition
+## 🏗️ Architecture du projet
+
+well-data-qc-pipeline/
+│
+├── 📁 data/
+│   ├── Volve production data.xlsx    ← dataset brut
+│   ├── volve_production_clean.csv    ← données nettoyées
+│   └── volve_wells.db                ← base SQLite
+│
+├── 📁 notebooks/
+│   └── 01_EDA.ipynb                  ← exploration + nettoyage
+│
+├── 📁 src/
+│   ├── qc_engine.py                  ← moteur QC automatisé
+│   ├── db_loader.py                  ← chargement SQLite
+│   └── pdf_report.py                 ← rapport PDF automatisé
+│
+├── 📁 dashboard/
+│   └── app.py                        ← dashboard Streamlit
+│
+├── 📁 reports/
+│   └── qc_rapport_volve.pdf          ← rapport QC généré
+│
+└── requirements.txt
 
 ---
 
-### 📤 SHARE
-| Deliverable | Description |
-|---|---|
-| Interactive Dashboard | Streamlit app — portfolio view + per-well detail |
-| Automated QC Report | PDF per well — ready to send to geoscience teams |
-| GitHub Repository | Documented code + professional README in English |
+## 🛠️ Stack Technique
+
+`Python 3.13` · `pandas` · `plotly` · `streamlit` · `SQLite` · `SQLAlchemy` · `ReportLab` · `Git`
 
 ---
 
-## 🛠️ Stack
-`Python` · `lasio` · `pandas` · `plotly` · `streamlit` · `SQLite` · `SQLAlchemy`
+## 📦 Installation locale
+
+```bash
+# Clone le repo
+git clone https://github.com/Elombrasco/well-data-qc-pipeline.git
+cd well-data-qc-pipeline
+
+# Crée l'environnement virtuel
+python -m venv venv
+source venv/Scripts/activate  # Windows
+
+# Installe les dépendances
+pip install -r requirements.txt
+
+# Lance le dashboard
+cd dashboard
+streamlit run app.py
+```
 
 ---
 
-## 👤 Author
-Frejus IBATTA — Geophysical Engineer | Data Analyst  
-https://www.linkedin.com/in/frejus-ibatta/ · obesse017@gmail.com
+## 👤 Auteur
+
+**Elom Brasco** — Ingénieur Géophysicien | Data enthousiast
+Formation : CentraleSupélec Openclassrooms · Université de Bordeaux · Google Data Analytics  
+[https://www.linkedin.com/in/frejus-ibatta/](#) · [obesse017@gmail.com](#)
