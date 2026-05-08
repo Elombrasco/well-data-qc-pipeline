@@ -57,23 +57,37 @@ x enterprise opère des milliers de puits à travers le monde. Les données de d
 well-data-qc-pipeline/
 │
 ├── 📁 data/
+|   |
 │   ├── Volve production data.xlsx    ← dataset brut
+|  |
 │   ├── volve_production_clean.csv    ← données nettoyées
+|  |
 │   └── volve_wells.db                ← base SQLite
 │
+|
 ├── 📁 notebooks/
+|   |
 │   └── 01_EDA.ipynb                  ← exploration + nettoyage
 │
+|
 ├── 📁 src/
+|   |
 │   ├── qc_engine.py                  ← moteur QC automatisé
+|   |
 │   ├── db_loader.py                  ← chargement SQLite
+|   |
 │   └── pdf_report.py                 ← rapport PDF automatisé
+|
 │
 ├── 📁 dashboard/
+|   |
 │   └── app.py                        ← dashboard Streamlit
 │
+|
 ├── 📁 reports/
+|   |
 │   └── qc_rapport_volve.pdf          ← rapport QC généré
+|
 │
 └── requirements.txt
 
