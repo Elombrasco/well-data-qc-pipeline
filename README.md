@@ -8,7 +8,7 @@
 
 ## 🎯 Business Problem
 
-x enterprise opère des milliers de puits à travers le monde. Les données de diagraphies collectées proviennent de sources hétérogènes — prestataires, équipes terrain, bases historiques. Des données mal qualifiées entraînent :
+Equinor opère des milliers de puits à travers le monde. Les données de diagraphies collectées proviennent de sources hétérogènes — prestataires, équipes terrain, bases historiques. Des données mal qualifiées entraînent :
 
 - Des **erreurs d'interprétation géologique** coûteuses
 - Des **retards de décision** sur les projets d'exploration
@@ -54,42 +54,18 @@ x enterprise opère des milliers de puits à travers le monde. Les données de d
 
 ## 🏗️ Architecture du projet
 
-well-data-qc-pipeline/
-│
-├── 📁 data/
-|   |
-│   ├── Volve production data.xlsx    ← dataset brut
-|  |
-│   ├── volve_production_clean.csv    ← données nettoyées
-|  |
-│   └── volve_wells.db                ← base SQLite
-│
-|
-├── 📁 notebooks/
-|   |
-│   └── 01_EDA.ipynb                  ← exploration + nettoyage
-│
-|
-├── 📁 src/
-|   |
-│   ├── qc_engine.py                  ← moteur QC automatisé
-|   |
-│   ├── db_loader.py                  ← chargement SQLite
-|   |
-│   └── pdf_report.py                 ← rapport PDF automatisé
-|
-│
-├── 📁 dashboard/
-|   |
-│   └── app.py                        ← dashboard Streamlit
-│
-|
-├── 📁 reports/
-|   |
-│   └── qc_rapport_volve.pdf          ← rapport QC généré
-|
-│
-└── requirements.txt
+| Dossier / Fichier | Description |
+|---|---|
+| `data/Volve production data.xlsx` | Dataset brut — Equinor Open Dataset |
+| `data/volve_production_clean.csv` | Données nettoyées (0 doublon, 0 null) |
+| `data/volve_wells.db` | Base de données SQLite structurée |
+| `notebooks/01_EDA.ipynb` | Exploration + nettoyage (PREPARE & PROCESS) |
+| `src/qc_engine.py` | Moteur QC automatisé — 5 règles de qualité |
+| `src/db_loader.py` | Chargement des données dans SQLite |
+| `src/pdf_report.py` | Génération du rapport PDF automatisé |
+| `dashboard/app.py` | Dashboard Streamlit interactif |
+| `reports/qc_rapport_volve.pdf` | Rapport QC généré en français |
+| `requirements.txt` | Dépendances Python du projet |
 
 ---
 
